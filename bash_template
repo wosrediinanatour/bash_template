@@ -39,10 +39,10 @@ trap "clean_up" EXIT ERR
 
 help () {
 
-   printf "\nUsage: %s [--username|-u <name> [--password|-p <password>]] [--help]" "${__base}"
+   printf    "\nUsage: %s [--username|-u <name> [--password|-p <password>]] [--help]" "${__base}"
    printf -- "\n\n\tBrief description"
    printf -- "\n\n"
-   printf -- "\tRoot directory: %s\n\n" "${__root}"
+   printf    "\tRoot directory: %s\n\n" "${__root}"
 
 }
 
