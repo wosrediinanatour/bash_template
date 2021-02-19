@@ -1,2 +1,5 @@
-# bash_template
-State-of-the-art BASH template
+# Templates
+
+This repo shall include useful templates.
+
+Feel free to make pull requests.

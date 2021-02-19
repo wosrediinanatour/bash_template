@@ -1,0 +1,104 @@
+#!/usr/bin/env bash	
+#
+# Features:
+# 
+#  Mmodern Bash syntax
+#  Using funtions
+#  Support "--help"
+#  Read username and password
+#  Clean up afterwards
+#
+# General References:
+#   - Cheatsheet: https://devhints.io/bash
+#   - Bash Guide: mywiki.wooledge.org/BashGuide
+#   - Style Guide: https://github.com/progrium/bashstyle
+#   - Best practice: https://sap1ens.com/blog/2017/07/01/bash-scripting-best-practices/
+#   - Write idempotent code: https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/
+#
+
+
+# Code by https://bertvv.github.io/cheat-sheets/Bash.html
+set -o errexit   # Abort on nonzero exitstatus
+set -o nounset   # Abort on unbound variable
+set -o pipefail  # Don't hide errors within pipes
+
+# Code by https://kvz.io/bash-best-practices.html
+readonly __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+readonly __base="$(basename "${__file}")"
+readonly __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+clean_up () {
+
+   local result=$?
+   # Add clean-up code here.
+   exit "${result}"
+
+}
+trap "clean_up" EXIT ERR
+
+help () {
+
+   printf "\nUsage: %s [--username|-u <name> [--password|-p <password>]] [--help]" "${__base}"
+   printf -- "\n\n\tBrief description"
+   printf -- "\n\n"
+   printf -- "\tRoot directory: %s\n\n" "${__root}"
+
+}
+
+is_empty () {
+
+   local string="${1}"
+   [[ -z "${string}" ]]
+
+}
+
+
+main() {
+
+   local username=""
+   local password=""
+
+
+   # Parse command line
+   while [ $# -gt 0 ]; do
+       case "${1}" in
+         --help)
+             help >&2
+             exit 1
+             ;;
+         --username | -u)
+              username="${2}"; shift
+             ;;
+         --password | -p)
+             password="${2}"; shift
+             ;;
+         -*)
+             {
+                printf "Error: Unknown option: %s" "${1}"
+                help
+             } >&2
+             exit 2
+             ;;
+         *)  break
+             ;;
+       esac
+       shift
+   done
+
+if is_empty "${username}"; then
+   printf -- "\nUsername: "; read -r username
+   if is_empty "${password}"; then
+      printf -- "\nPassword: "; read -r -s password 
+   fi
+fi
+   
+}
+
+main "${@}"
+
+
+
+
+
+
